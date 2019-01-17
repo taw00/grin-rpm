@@ -158,7 +158,7 @@ BuildRequires: cmake >= 3.11.0
 BuildRequires: ncurses-devel ncurses-libs
 # Needed to build ocl_cuckaroo.cuckooplugin
 BuildRequires: ocl-icd-devel
-Requires: grin >= %{vermajor}
+Requires: grin-mw >= %{vermajor}
 
 # tree, vim-enhanced, and less for mock build environment introspection
 %if ! %{targetIsProduction}
