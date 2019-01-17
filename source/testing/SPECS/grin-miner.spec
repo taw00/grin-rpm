@@ -23,24 +23,24 @@ Summary: A peer-to-peer digital currency implementing mimblewimble (miner)
 
 %define targetIsProduction 0
 
-# ARCHIVE QUALIFIER - edit this if applies
+# ARCHIVE QUALIFIER
 # ie. if the dev team includes things like rc3 in the filename
 %define archiveQualifier rc1
 %define includeArchiveQualifier 0
 
-# VERSION - edit this
+# VERSION
 %define vermajor 1.0
 %define verminor 1
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - edit this
+# RELEASE
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
-# MINORBUMP - edit this
+# MINORBUMP
 # builder's initials and often a numeral for very small or rapid iterations
 # taw, taw0, taw1, etc.
 %define minorbump taw
@@ -121,7 +121,7 @@ Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}-%{archiv
 Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}/%{archivename}.tar.gz
 %endif
 #Source1: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%%{srccontribtree}.tar.gz
-Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/grin-miner-git-submodule-update-init-2019-01-16.patch
+Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/grin-miner-%{version}-git-submodule-update-init-2019-01-16.patch
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
 # be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
@@ -149,7 +149,7 @@ ExclusiveArch: x86_64 i686 i386
 
 # As recommended by...
 # https://github.com/mimblewimble/grin-miner/blob/master/doc/build.md
-BuildRequires: patch
+BuildRequires: patch sed
 BuildRequires: rust >= 1.31 cargo
 BuildRequires: pkgconf-pkg-config
 BuildRequires: clang zlib-devel llvm
@@ -279,19 +279,24 @@ install -d -m755 -p %{buildroot}%{_includedir}
 # /var/lib/grin/... - grinuser's $HOME directory
 install -d -m755 -p %{buildroot}%{_sharedstatedir}/grin/plugins
 
-cp %{srccodetree}/target/release/grin-miner %{buildroot}%{_bindir}/
-cp %{srccodetree}/target/release/plugins/* %{buildroot}%{_sharedstatedir}/grin/plugins/
-install -D -m644 %{srccodetree}/grin-miner.toml %{buildroot}%{_sharedstatedir}/grin/
+cd %{srccodetree}
+cp target/release/grin-miner %{buildroot}%{_bindir}/
+cp target/release/plugins/* %{buildroot}%{_sharedstatedir}/grin/plugins/
+#install -D -m644 grin-miner.toml %{buildroot}%{_sharedstatedir}/grin/
+sed '~s~#miner_plugin_dir = "target/debug/plugins"~miner_plugin_dir = "%{_sharedstatedir}/grin/plugins/"~' grin-miner.toml > %{buildroot}%{_sharedstatedir}/grin/grin-miner.toml
+cd ..
 
 ### /etc/sysconfig/grin-scripts/
 ##install -d %%{buildroot}%%{_sysconfdir}/sysconfig/grin-scripts
 
+# TODO -- get systemd stuff added -- copy-catting from my dashcore builds
 ### System services
 ##install -D -m600 -p %%{srccontribtree}/linux/systemd/etc-sysconfig_grin-miner %%{buildroot}%%{_sysconfdir}/sysconfig/grin-miner
 ##install -D -m755 -p %%{srccontribtree}/linux/systemd/etc-sysconfig-grin-scripts_grin-miner.send-email.sh %%{buildroot}%%{_sysconfdir}/sysconfig/grin-scripts/grin-miner.send-email.sh
 ##install -D -m644 -p %%{srccontribtree}/linux/systemd/usr-lib-systemd-system_grin-miner.service %%{buildroot}%%{_unitdir}/grin-miner.service
 ##install -D -m644 -p %%{srccontribtree}/linux/systemd/usr-lib-tmpfiles.d_grin-miner.conf %%{buildroot}%%{_tmpfilesdir}/grin-miner.conf
-#
+
+# TODO -- get firewall stuff added -- copy-catting from my dashcore builds
 ### Service definition files for firewalld for full and master nodes
 ##install -D -m644 -p %%{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %%{buildroot}%%{_usr_lib}/firewalld/services/dashcore.xml
 ##install -D -m644 -p %%{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %%{buildroot}%%{_usr_lib}/firewalld/services/dashcore-testnet.xml
@@ -362,7 +367,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.2.testing.taw
+  - Changed the default plugins directory in the shipped grin-miner.toml file
+
 * Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.1.testing.taw
+  - Updated source tarball and fixed a lot of things in the specfile
+
 * Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.0-0.1.testing.taw
   - Initial builds
 

@@ -23,24 +23,24 @@ Summary: Peer-to-peer digital currency implementing mimblewimble.
 
 %define targetIsProduction 0
 
-# ARCHIVE QUALIFIER - edit this if applies
+# ARCHIVE QUALIFIER
 # ie. if the dev team includes things like rc3 in the filename
 %define archiveQualifier rc1
 %define includeArchiveQualifier 0
 
-# VERSION - edit this
+# VERSION
 %define vermajor 1.0
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - edit this
+# RELEASE
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
   %define _pkgrel 0.1
 %endif
 
-# MINORBUMP - edit this
+# MINORBUMP
 # builder's initials and often a numeral for very small or rapid iterations
 # taw, taw0, taw1, etc.
 %define minorbump taw
@@ -160,7 +160,7 @@ ExclusiveArch: x86_64 i686 i386
 
 # As recommended by...
 # https://github.com/mimblewimble/grin/blob/master/doc/build.md
-BuildRequires: patch
+BuildRequires: patch sed
 BuildRequires: rust >= 1.31 cargo
 BuildRequires: pkgconf-pkg-config
 BuildRequires: clang zlib-devel llvm
@@ -363,9 +363,12 @@ install -d -m755 -p %{buildroot}%{_includedir}
 install -d -m755 -p %{buildroot}%{_sharedstatedir}/grin/plugins
 
 cp %{srccodetree0}/target/release/grin %{buildroot}%{_bindir}/
-cp %{srccodetree1}/target/release/grin-miner %{buildroot}%{_bindir}/
-cp %{srccodetree1}/target/release/plugins/* %{buildroot}%{_sharedstatedir}/grin/plugins/
-install -D -m644 %{srccodetree1}/grin-miner.toml %{buildroot}%{_sharedstatedir}/grin/
+cd %{srccodetree1}
+cp target/release/grin-miner %{buildroot}%{_bindir}/
+cp target/release/plugins/* %{buildroot}%{_sharedstatedir}/grin/plugins/
+#install -D -m644 %{srccodetree1}/grin-miner.toml %{buildroot}%{_sharedstatedir}/grin/
+sed '~s~#miner_plugin_dir = "target/debug/plugins"~miner_plugin_dir = "%{_sharedstatedir}/grin/plugins/"~' grin-miner.toml > %{buildroot}%{_sharedstatedir}/grin/grin-miner.toml
+cd ..
 
 ### /etc/sysconfig/grin-scripts/
 ##install -d %%{buildroot}%%{_sysconfdir}/sysconfig/grin-scripts

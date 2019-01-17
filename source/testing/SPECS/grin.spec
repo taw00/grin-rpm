@@ -23,24 +23,24 @@ Summary: Peer-to-peer digital currency implementing mimblewimble (wallet and nod
 
 %define targetIsProduction 0
 
-# ARCHIVE QUALIFIER - edit this if applies
+# ARCHIVE QUALIFIER
 # ie. if the dev team includes things like rc3 in the filename
 %define archiveQualifier rc1
 %define includeArchiveQualifier 0
 
-# VERSION - edit this
+# VERSION
 %define vermajor 1.0
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - edit this
+# RELEASE
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
   %define _pkgrel 0.1
 %endif
 
-# MINORBUMP - edit this
+# MINORBUMP
 # builder's initials and often a numeral for very small or rapid iterations
 # taw, taw0, taw1, etc.
 %define minorbump taw

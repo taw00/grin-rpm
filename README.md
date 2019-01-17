@@ -55,8 +55,7 @@ grin wallet info
 grin wallet help
 ```
 
-That will get you started, but... better to ready how to use a
-wallet
+That will get you started, but... better to read how to use a wallet
 [here](https://github.com/mimblewimble/docs/wiki/how-to-use-the-grin-wallet#checking-your-wallet-balance).
 
 ### I want to run a node
@@ -78,7 +77,7 @@ Again, all data is stored, by default, in `~/.grin/`
 to run your own node and then have your wallet connect to it.
 
 
-### I want to run a miner
+### I want to run a grin miner
 
 1. Terminal window one:
    - Get a node running (see above)
@@ -92,7 +91,7 @@ to run your own node and then have your wallet connect to it.
    - The wallet will stay running.
 4. Terminal window three:  
    The grin miner is a bit more quirky than the rest, so... pay attention!
-   - Copy the default grin-miner.toml file to your local data directory...  
+   - Copy the default `grin-miner.toml` file to your local data directory...  
      ```
      cp /var/lib/grin/grin-miner.toml ~/.grin/
      ```
