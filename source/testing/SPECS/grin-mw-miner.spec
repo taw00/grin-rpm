@@ -1,14 +1,14 @@
-# GRIM Miner - a miner for grin, a digital currency implementing Mimblewimble
+# Grin Miner - a miner for grin, a digital currency implementing Mimblewimble
 # Reference implementation
 # vim:tw=0:ts=2:sw=2:et:
 #
-# This is the rpm spec for building a Grim client and full node.
+# This is the rpm spec for building a grin mining client
 #
 # Packages built:
-# * grin-miner
-# * grin-miner-debuginfo (not always/often built)
+# * grin-mw-miner
+# * grin-mw-miner-debuginfo (not always/often built)
 # 
-# Requires: grin
+# Requires: grin-mw
 #
 # DISCLAIMER:
 # This RPM spec file is a work in progress
@@ -18,7 +18,9 @@
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
-Name: grin-miner
+%define name0 grin-miner
+%define name1 grin-mw-miner
+Name: %{name1}
 Summary: A peer-to-peer digital currency implementing mimblewimble (miner)
 
 %define targetIsProduction 0
@@ -37,7 +39,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -85,11 +87,11 @@ Release: %{_release}
 # v1.0.0.tar.gz
 %define _archivename_alt1 v%{version}
 # grin-miner-1.0.0.tar.gz
-%define _archivename_alt2 %{name}-%{version}
+%define _archivename_alt2 %{name0}-%{version}
 # mainnet-release.tar.gz
 %define _archivename_alt3 mainnet-release
 # grin-miner-mainnet-release.tar.gz
-%define _archivename_alt4 %{name}-mainnet-release
+%define _archivename_alt4 %{name0}-mainnet-release
 
 # our selection for this build - edit this
 %define _archivename %{_archivename_alt2}
@@ -104,11 +106,9 @@ Release: %{_release}
 %endif
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               grin-miner-1.0
+#   srcroot               grin-mw-miner-1.0
 #      \_srccodetree        \_grin-miner-1.0.0
-#      \_srccontribtree     \_grin-miner-1.0-contrib
-%define srcroot %{name}-%{vermajor}
-%define srccontribtree %{name}-%{vermajor}-contrib
+%define srcroot %{name1}-%{vermajor}
 # srccodetree defined earlier
 
 # Note, that ...
@@ -120,8 +120,8 @@ Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}-%{archiv
 %else
 Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}/%{archivename}.tar.gz
 %endif
-#Source1: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%%{srccontribtree}.tar.gz
-Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/grin-miner-%{version}-git-submodule-update-init-2019-01-16.patch
+%define _patchdate 2019-01-17
+Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%{name0}-%{version}-git-submodule-update-init-%{_patchdate}.patch
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
 # be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
@@ -243,7 +243,7 @@ cd ..
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
 #   _builddir = {_topdir}/BUILD
 #   _buildrootdir = {_topdir}/BUILDROOT
-#   buildroot = {_buildrootdir}/{name}-{version}-{release}.{_arch}
+#   buildroot = {_buildrootdir}/{name1}-{version}-{release}.{_arch}
 #   _bindir = /usr/bin
 #   _sbindir = /usr/sbin
 #   _datadir = /usr/share
@@ -282,7 +282,7 @@ install -d -m755 -p %{buildroot}%{_sharedstatedir}/grin/plugins
 cd %{srccodetree}
 cp target/release/grin-miner %{buildroot}%{_bindir}/
 cp target/release/plugins/* %{buildroot}%{_sharedstatedir}/grin/plugins/
-#install -D -m644 grin-miner.toml %{buildroot}%{_sharedstatedir}/grin/
+#install -D -m644 grin-miner.toml %%{buildroot}%%{_sharedstatedir}/grin/
 sed '~s~#miner_plugin_dir = "target/debug/plugins"~miner_plugin_dir = "%{_sharedstatedir}/grin/plugins/"~' grin-miner.toml > %{buildroot}%{_sharedstatedir}/grin/grin-miner.toml
 cd ..
 
@@ -367,12 +367,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
-* Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.2.testing.taw
-  - Changed the default plugins directory in the shipped grin-miner.toml file
-
-* Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.1.testing.taw
-  - Updated source tarball and fixed a lot of things in the specfile
-
-* Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.0-0.1.testing.taw
-  - Initial builds
+* Thu Jan 17 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.1.testing.taw
+  - Initial build
+  - Name is grin-mw to avoid a name conflict with another long-standing package
 

@@ -1,12 +1,12 @@
-# GRIM - a digital currency implementing Mimblewimble - full node and wallet
+# Grin Wallet and Node- a digital currency implementing Mimblewimble
 # Reference implementation
 # vim:tw=0:ts=2:sw=2:et:
 #
-# This is the rpm spec for building a Grim client and full node.
+# This is the rpm spec for building a grin client and full node.
 #
 # Packages built:
-# * grin
-# * grin-debuginfo (not always/often built)
+# * grin-mw
+# * grin-mw-debuginfo (not always/often built)
 #
 # DISCLAIMER:
 # This RPM spec file is a work in progress (the dash references here and there
@@ -17,7 +17,9 @@
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
-Name: grin
+%define name0 grin
+%define name1 grin-mw
+Name: %name1
 Summary: Peer-to-peer digital currency implementing mimblewimble (wallet and node)
 
 
@@ -85,11 +87,11 @@ Release: %{_release}
 # v1.0.0.tar.gz
 %define _archivename_alt1 v%{version}
 # grin-1.0.0.tar.gz
-%define _archivename_alt2_grin %{name}-%{version}
+%define _archivename_alt2_grin %{name0}-%{version}
 # mainnet-release.tar.gz
 %define _archivename_alt3 mainnet-release
 # grin-mainnet-release.tar.gz
-%define _archivename_alt4_grin %{name}-mainnet-release
+%define _archivename_alt4_grin %{name0}-mainnet-release
 
 # our selection for this build - edit this
 %define _archivename0 %{_archivename_alt2_grin}
@@ -104,11 +106,11 @@ Release: %{_release}
 %endif
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               grin-1.0
+#   srcroot               grin-mw-1.0
 #      \_srccodetree0       \_grin-1.0.0
-#      \_srccontribtree     \_grin-1.0-contrib
-%define srcroot %{name}-%{vermajor}
-%define srccontribtree %{name}-%{vermajor}-contrib
+#      \_srccontribtree     \_grin-mw-1.0-contrib
+%define srcroot %{name1}-%{vermajor}
+%define srccontribtree %{name1}-%{vermajor}-contrib
 # srccodetrees defined earlier
 
 # Note, that ...
@@ -120,7 +122,7 @@ Source0: https://github.com/mimblewimble/grin/archive/v%{version}-%{archiveQuali
 %else
 Source0: https://github.com/mimblewimble/grin/archive/v%{version}/%{archivename0}.tar.gz
 %endif
-#Source2: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%%{srccontribtree}.tar.gz
+Source2: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%%{srccontribtree}.tar.gz
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
 # be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
@@ -210,7 +212,7 @@ mkdir -p %{srcroot}
 %setup -q -T -D -a 0 -n %{srcroot}
 # contributions
 # {_builddir}/grin-1.0.0/grin-1.0-contrib/
-#%%setup -q -T -D -a 2 -n %%{srcroot}
+%setup -q -T -D -a 2 -n %{srcroot}
 
 
 %build
@@ -228,7 +230,7 @@ cd ..
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
 #   _builddir = {_topdir}/BUILD
 #   _buildrootdir = {_topdir}/BUILDROOT
-#   buildroot = {_buildrootdir}/{name}-{version}-{release}.{_arch}
+#   buildroot = {_buildrootdir}/{name1}-{version}-{release}.{_arch}
 #   _bindir = /usr/bin
 #   _sbindir = /usr/sbin
 #   _datadir = /usr/share
@@ -262,9 +264,10 @@ install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
 install -d -m755 -p %{buildroot}%{_includedir}
 
 # /var/lib/grin/... - grinuser's $HOME directory
-install -d -m755 -p %{buildroot}%{_sharedstatedir}/grin/plugins
-
-cp %{srccodetree0}/target/release/grin %{buildroot}%{_bindir}/
+install -d -m755 -p %{buildroot}%{_sharedstatedir}/grin
+cp %{srccodetree0}/target/release/grin %{buildroot}%{_sharedstatedir}/grin/
+cp %{srccontribtree}/grin-wallet %{buildroot}%{_bindir}/
+cp %{srccontribtree}/grin-node %{buildroot}%{_bindir}/
 
 ### /etc/sysconfig/grin-scripts/
 ##install -d %%{buildroot}%%{_sysconfdir}/sysconfig/grin-scripts
@@ -311,7 +314,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files
 %defattr(-,root,root,-)
 %license %{srccodetree0}/LICENSE
-%{_bindir}/grin
+%{_bindir}/grin-wallet
+%{_bindir}/grin-node
+# _sharedstatedir}/grin == /var/lib/grin/... - grinuser's $HOME dir
+%defattr(-,grinuser,grinuser,-)
+%dir %attr(755,grinuser,grinuser) %{_sharedstatedir}/grin
+%attr(755,grinuser,grinuser) %{_sharedstatedir}/grin/grin
 
 ### Application as systemd service directory structure
 ##%%defattr(-,grinuser,grinuser,-)
@@ -342,6 +350,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Grin on Fedora...
 #   * Git Repo: https://github.com/taw00/grin-rpm
 %changelog
-* Wed Jan 16 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.0-0.1.testing.taw
+* Thu Jan 17 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.0-0.1.testing.taw
   - Initial build
-
+  - Note: Had to move the grin executable out of /usr/bin and into  
+    /var/lib/grin and then provide a wrapper script to sit in /usr/bin  
+    Why? Because of a name conflict w/ another package in the linux ecosystem.

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Wrapper script for the grin cryptocurrency node funcionality.
+#
+# grin-node executes "grin" out of the /var/lib/grin/ directory.
+#
+#
+# Why does this exist? Because in the linux ecosystem, "grin" has been used by
+# a python project for a very long time and therefore there is a namespace
+# clash. You can find that project here: https://pypi.org/project/grin/
+
+/var/lib/grin/grin $@
