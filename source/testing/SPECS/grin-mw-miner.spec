@@ -32,7 +32,7 @@ Summary: A peer-to-peer digital currency implementing mimblewimble (miner)
 
 # VERSION
 %define vermajor 1.0
-%define verminor 1
+%define verminor 2
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -367,6 +367,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Thu Jan 17 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.2-0.1.testing.taw
+  - Upstream bugfix
+
 * Thu Jan 17 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.1.testing.taw
   - Initial build
   - Name is grin-mw to avoid a name conflict with another long-standing package
