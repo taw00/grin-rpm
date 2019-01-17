@@ -96,16 +96,30 @@ to run your own node and then have your wallet connect to it.
      cp /var/lib/grin/grin-miner.toml ~/.grin/
      ```
    - Change the plugins directory (if it isn't already) to `/var/lib/grin/plugins`  
+     Note: this will be done for you in v1.0.1-0.2  
      `miner_plugin_dir = "target/debug/plugins"` to  
      `miner_plugin_dir = "/var/lib/grin/plugins"`
-   - Change the mining algorithm if you know what you are doing. Read more about that [here](https://github.com/mimblewimble/docs/wiki/how-to-mine-grin#configure-grin-miner)
+   - Change the mining algorithm if you know what you are doing. Read more
+     about that
+     [here](https://github.com/mimblewimble/docs/wiki/how-to-mine-grin#configure-grin-miner)
    - Run the miner from the `.grin` directory. Yup. Odd, but that is the way it is...  
      ```
      cd ~/.grin
      grin-miner
      ```
+
 That sums it all up!
 
 
 Good luck!
 -t0dd or taw in most chat platforms and forums
+
+...
+
+Check out my other crypto-oriented RPM builds:
+- Dash (my longest running and tested builds): https://github.com/taw00/dashcore-rpm
+- Electrum-Dash (somewhat experimental): https://github.com/taw00/electrum-dash-rpm
+- ZCash: https://github.com/taw00/dashcore-rpm
+- Beam: https://github.com/taw00/beam-rpm
+- IPFS (somewhat experimental): https://github.com/taw00/ipfs-rpm
+
