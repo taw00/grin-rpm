@@ -13,7 +13,7 @@ repo-enabling package and install grin-mw or grin-mw-miner. Here you go...
 
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/grin-rpm/master/toddpkgs-grin-repo.fedora.testing.rpm
+sudo dnf install -y https://raw.githubusercontent.com/taw00/grin-rpm/master/toddpkgs-grin-mw-repo.fedora.testing.rpm
 sudo dnf list --refresh |grep grin
 #sudo dnf install -y grin-mw
 #sudo dnf install -y grin-miner-mw
@@ -21,7 +21,8 @@ sudo dnf list --refresh |grep grin
 
 **A couple notes about the name _grin-mw-\*_**
 - In the linux universe there already exists a package named "grin". Therefore
-  both the package and the `/usr/bin/grin` application had to be renamed/moved.
+  both the packages and the `/usr/bin/grin` application had to be
+  renamed/moved.
 - The executable, `grin`, has been moved into the `/var/lib/grin/` directory
   tree and two wrapper scripts have been created to run the application:
   `grin-wallet` and `grin-node`. I could have just settled on one script to
