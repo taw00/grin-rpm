@@ -129,10 +129,11 @@ Good luck!
 
 ...
 
-Check out my other crypto-oriented RPM builds:
-- Dash (my longest running and tested builds): https://github.com/taw00/dashcore-rpm
-- Electrum-Dash (somewhat experimental): https://github.com/taw00/electrum-dash-rpm
-- ZCash: https://github.com/taw00/dashcore-rpm
-- Beam: https://github.com/taw00/beam-rpm
-- IPFS (somewhat experimental): https://github.com/taw00/ipfs-rpm
+Check out all my crypto-oriented RPM builds:
+- Dash (my longest running and tested builds): <https://github.com/taw00/dashcore-rpm>
+- Electrum-Dash: <https://github.com/taw00/electrum-dash-rpm> (experimental)
+- ZCash: <https://github.com/taw00/zcash-rpm>
+- Beam: <https://github.com/taw00/beam-rpm>
+- Grin: <https://github.com/taw00/grin-rpm>
+- IPFS: <https://github.com/taw00/ipfs-rpm> (experimental)
 
