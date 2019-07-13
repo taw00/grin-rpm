@@ -31,8 +31,8 @@ Summary: A peer-to-peer digital currency implementing mimblewimble (miner)
 %define includeArchiveQualifier 0
 
 # VERSION
-%define vermajor 1.0
-%define verminor 2
+%define vermajor 2.0
+%define verminor 0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -120,7 +120,7 @@ Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}-%{archiv
 %else
 Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}/%{archivename}.tar.gz
 %endif
-%define _patchdate 2019-01-17
+%define _patchdate 2019-07-13
 Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%{name0}-%{version}-git-submodule-update-init-%{_patchdate}.patch
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
@@ -213,9 +213,6 @@ mkdir -p %{srcroot}
 # ..or something like..
 # {_builddir}/grin-miner-1.0.0/grin-miner-testnet4-release/
 %setup -q -T -D -a 0 -n %{srcroot}
-# contributions
-# {_builddir}/grin-miner-1.0.0/grin-miner-1.0-contrib/
-#%%setup -q -T -D -a 1 -n %%{srcroot}
 # patches
 cd %{srccodetree}
 %patch0 -p1
@@ -367,6 +364,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Sat Jul 13 2019 Todd Warner <t0dd_at_protonmail.com> 2.0.0-0.1.testing.taw
+  - 2.0.0
+
 * Thu Jan 17 2019 Todd Warner <t0dd_at_protonmail.com> 1.0.2-0.1.testing.taw
   - Upstream bugfix
 
