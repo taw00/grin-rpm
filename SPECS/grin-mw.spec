@@ -32,8 +32,8 @@ Summary: Peer-to-peer digital currency implementing mimblewimble (wallet and nod
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 2.1
-%define verminor 1
+%define vermajor 3.0
+%define verminor 0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -355,6 +355,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Grin on Fedora...
 #   * Git Repo: https://github.com/taw00/grin-rpm
 %changelog
+* Fri Jan 03 2020 Todd Warner <t0dd_at_protonmail.com> 3.0.0-0.1.testing.taw
+  - 3.0.0
+
 * Fri Nov 01 2019 Todd Warner <t0dd_at_protonmail.com> 2.1.1-0.1.testing.taw
   - 2.1.1
 
