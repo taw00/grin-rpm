@@ -27,11 +27,11 @@ Summary: A peer-to-peer digital currency implementing mimblewimble (miner)
 
 # ARCHIVE QUALIFIER
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc1
-%define includeArchiveQualifier 0
+%define buildQualifier rc1
+%undefine buildQualifier
 
 # VERSION
-%define vermajor 2.0
+%define vermajor 3.0
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
@@ -52,8 +52,8 @@ Version: %{vermajor}.%{verminor}
 #
 
 %define snapinfo testing
-%if %{includeArchiveQualifier}
-  %define snapinfo %{archiveQualifier}
+%if 0%{?buildQualifier:1}
+  %define snapinfo %{buildQualifier}
   %if %{targetIsProduction}
     %undefine snapinfo
   %endif
@@ -97,9 +97,9 @@ Release: %{_release}
 %define _archivename %{_archivename_alt2}
 %define _srccodetree %{_archivename_alt2}
 
-%if %{includeArchiveQualifier}
-  %define archivename %{_archivename}-%{archiveQualifier}
-  %define srccodetree %{_srccodetree}-%{archiveQualifier}
+%if 0%{?buildQualifier:1}
+  %define archivename %{_archivename}-%{buildQualifier}
+  %define srccodetree %{_srccodetree}-%{buildQualifier}
 %else
   %define archivename %{_archivename}
   %define srccodetree %{_srccodetree}
@@ -115,12 +115,12 @@ Release: %{_release}
 # https://github.com/mimblewimble/grin-miner/archive/v1.0.0.tar.gz
 # ...is the same as...
 # https://github.com/mimblewimble/grin-miner/archive/v1.0.0/grin-miner-1.0.0.tar.gz
-%if %{includeArchiveQualifier}
-Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}-%{archiveQualifier}/%{archivename}.tar.gz
+%if 0%{?buildQualifier:1}
+Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}-%{buildQualifier}/%{archivename}.tar.gz
 %else
 Source0: https://github.com/mimblewimble/grin-miner/archive/v%{version}/%{archivename}.tar.gz
 %endif
-%define _patchdate 2019-07-13
+%define _patchdate 2020-02-17
 Patch0: https://github.com/taw00/grin-rpm/blob/master/source/testing/SOURCES/%{name0}-%{version}-git-submodule-update-init-%{_patchdate}.patch
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
@@ -364,6 +364,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Mon Feb 17 2020 Todd Warner <t0dd_at_protonmail.com> 3.0.0-0.1.testing.taw
+  - 3.0.0
+  - Changed how the build qualifier works to be more in line with other RPMs  
+    I build.
+
 * Sat Jul 13 2019 Todd Warner <t0dd_at_protonmail.com> 2.0.0-0.1.testing.taw
   - 2.0.0
 
