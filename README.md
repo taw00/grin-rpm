@@ -1,4 +1,7 @@
 # grin-rpm
+
+## THIS REPOSITORY IS NO LONGER BEING MAINTAINED
+
 GRIN for Fedora
 
 NOTE: All of this is still in testing.
